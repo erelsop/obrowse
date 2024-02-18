@@ -33,17 +33,17 @@ export interface Arguments {
 }
 
 const argv = yargs(hideBin(process.argv)).options({
-  browser: { type: "string", optional: true },
-  url: { type: "string", optional: true },
-  resolution: { type: "string", optional: true },
-  userAgent: { type: "string", optional: true },
-  pdf: { type: "string", optional: true },
-  format: { type: "string", optional: true },
-  landscape: { type: "boolean", optional: true },
-  recordVideo: { type: "boolean", optional: true },
-  videoDir: { type: "string", optional: true },
-  videoSize: { type: "string", optional: true },
-  proxy: { type: "string", optional: true },
+  browser: { type: "string", optional: true, description: "The browser to use. Supported browsers: `chrome`, `firefox`, `safari`."},
+  url: { type: "string", optional: true, description: "The URL to open in the browser."},
+  resolution: { type: "string", optional: true, description: "The resolution to use. Example: 1920x1080."},
+  userAgent: { type: "string", optional: true, description: "The user agent to use."},
+  pdf: { type: "string", optional: true, description: "The path to save the PDF file."},
+  format: { type: "string", optional: true, description: "The format of the PDF. Example: A4, Letter, etc."},
+  landscape: { type: "boolean", optional: true, description: "Whether to use landscape orientation for the PDF."},
+  recordVideo: { type: "boolean", optional: true, description: "Whether to record a video of the browser session."},
+  videoDir: { type: "string", optional: true, description: "The directory to save the video."},
+  videoSize: { type: "string", optional: true, description: "The size of the video. Example: 1280x720."},
+  proxy: { type: "string", optional: true, description: "The proxy server to use."},
   cfg: { type: "string", demandOption: true, description: "Path to the configuration file." },
 }).argv as Arguments;
 
