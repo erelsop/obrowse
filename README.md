@@ -88,7 +88,7 @@ This simplifies repeated use cases and makes it easy to share configurations bet
 
 The configuration file allows you to predefine settings for `obrowse`, making it easier to manage and reuse configurations. The file should be in JSON format and can include any of the following properties:
 
-```json
+```plaintext
 {
   "browser": "chrome | firefox | safari",
   "url": "https://example.com",
