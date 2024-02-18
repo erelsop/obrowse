@@ -78,7 +78,7 @@ const [width, height] = resolution
     await page.pdf({
       path: pdf,
       format: argv.format || "A4", // Use the format specified by the user or default to A4
-      landscape: argv.landscape, // Use the landscape option specified by the user
+      landscape, // Use the landscape option specified by the user
       printBackground: true, // Ensure background graphics are included
     });
     console.log(`PDF saved to ${pdf}`);
