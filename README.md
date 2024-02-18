@@ -1,3 +1,5 @@
+# OpenBrowse (obrowse)
+
 ## Installation on WSL2
 
 Ensure you have WSL2 and Node.js installed on your system. Node.js is a prerequisite for running `obrowse`. For instructions on installing Node.js, visit [Node.js official website](https://nodejs.org/).
