@@ -61,7 +61,8 @@ const [width, height] = resolution
   }
 
   // Launch the browser. Always in headful mode to ensure the window opens.
-  // The window is resizable, and the page content will respond to the size changes.
+  // The window is resizable, and the page content will respond to the size changes
+  // if no resolution is specified.
   const launchBrowser = await browser.launch({ headless: false});
 
   const context = await launchBrowser.newContext({
