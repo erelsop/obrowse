@@ -121,7 +121,7 @@ Please ensure your configuration file matches this schema to avoid errors. You c
 Example command using a configuration file:
 
 ```bash
-obrowse --cfg path/to/your/config.json
+obrowse --cfg "path/to/your/config.json"
 ```
 
 
