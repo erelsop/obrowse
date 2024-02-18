@@ -27,11 +27,6 @@ const cfg = verifyConfig(normalizedConfig);
 const mergedArgs = {
   ...cfg,
   ...normalizedArgv,
-  // Explicitly handle boolean flags
-  recordVideo:
-    normalizedArgv.recordVideo !== undefined
-      ? normalizedArgv.recordVideo
-      : cfg.recordVideo,
 };
 
 // Verify the `browser` and `url` arguments
@@ -42,7 +37,7 @@ if (!mergedArgs.browser || !mergedArgs.url) {
   process.exit(1);
 }
 
-console.log("Merged arguments:", mergedArgs);
+// console.log("Merged arguments:", mergedArgs);
 
 // Parse the resolution argument to extract width and height
 const [width, height] = mergedArgs.resolution
