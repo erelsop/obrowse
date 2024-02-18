@@ -1,78 +1,67 @@
 import { webkit, firefox, chromium, BrowserType } from "playwright";
-import yargs from "yargs/yargs";
-import { hideBin } from "yargs/helpers";
+import argv from "./args/args";
+import CaseConverter from "./util/CaseConverter";
+import loadConfig from "./util/loadConfig";
+import verifyConfig from "./util/verifyConfig";
 
-interface Arguments {
-  browser: string;
-  url: string;
-  resolution?: string | null;
-  userAgent?: string;
-  pdf?: string;
-  format?: string; // This could be 'A4', 'Letter', etc., or custom dimensions
-  landscape?: boolean;
+// Normalize argv keys to camelCase
+const normalizedArgv = CaseConverter.convertKeys(
+  argv,
+  CaseConverter.toCamelCase
+);
+
+// Load the configuration file
+const rawConfig = loadConfig(argv.cfg);
+
+// Normalize keys to camelCase to match TypeScript interface expectations
+const normalizedConfig = CaseConverter.convertKeys(
+  rawConfig,
+  CaseConverter.toCamelCase
+);
+
+// Verify the normalized configuration
+const cfg = verifyConfig(normalizedConfig);
+
+// Merge command-line arguments with the configuration, prioritizing command-line arguments
+// Merge configurations with priority to command-line arguments
+const mergedArgs = {
+  ...cfg,
+  ...normalizedArgv,
+  // Explicitly handle boolean flags
+  recordVideo:
+    normalizedArgv.recordVideo !== undefined
+      ? normalizedArgv.recordVideo
+      : cfg.recordVideo,
+};
+
+// Verify the `browser` and `url` arguments
+if (!mergedArgs.browser || !mergedArgs.url) {
+  console.error(
+    "Both 'browser' and 'url' must be specified, either in the command line or the configuration file."
+  );
+  process.exit(1);
 }
 
-const argv = yargs(hideBin(process.argv)).options({
-  browser: {
-    type: "string",
-    demandOption: true,
-    description: "Specify the browser to use (chrome, firefox, safari).",
-  },
-  url: {
-    type: "string",
-    demandOption: true,
-    description: "The URL to open.",
-  },
-  resolution: {
-    type: "string",
-    optional: true,
-    description: "Custom resolution for the browser window (e.g., '1280x720').",
-  },
-  userAgent: {
-    type: "string",
-    optional: true,
-    description: "Custom User-Agent string to simulate different devices.",
-  },
-  pdf: {
-    type: "string",
-    optional: true,
-    description: "Generate a PDF of the webpage (Chromium only).",
-  },
-  format: {
-    type: "string",
-    optional: true,
-    description:
-      "Specify the format for PDF generation (e.g., 'A4', 'Letter').",
-  },
-  landscape: {
-    type: "boolean",
-    default: false,
-    description: "Generate PDF in landscape orientation (Chromium only).",
-  },
-}).argv as Arguments;
-
-const {
-  browser: browserType,
-  url,
-  resolution,
-  userAgent,
-  pdf,
-  landscape,
-} = argv;
+console.log("Merged arguments:", mergedArgs);
 
 // Parse the resolution argument to extract width and height
-const [width, height] = resolution
-  ? resolution.split("x").map(Number)
-  : [null, null];
+const [width, height] = mergedArgs.resolution
+  ? mergedArgs.resolution.split("x").map(Number)
+  : [undefined, undefined];
+
+// Parse the videoSize argument to extract width and height
+const [videoWidth, videoHeight] = mergedArgs.videoSize
+  ? mergedArgs.videoSize.split("x").map(Number)
+  : [undefined, undefined];
 
 (async () => {
   let browser: BrowserType<any>;
-  if (pdf && browserType.toLowerCase() !== "chrome") {
+  if (mergedArgs.pdf && mergedArgs.browser.toLowerCase() !== "chrome") {
     console.log("PDF generation is only supported in Chromium (chrome).");
     process.exit(1);
   }
 
-  switch (browserType.toLowerCase()) {
+  switch (mergedArgs.browser.toLowerCase()) {
     case "chrome":
       browser = chromium;
       break;
@@ -89,33 +78,49 @@ const [width, height] = resolution
       process.exit(1);
   }
 
-  // Launch the browser. Always in headful mode to ensure the window opens.
-  // The window is resizable, and the page content will respond to the size changes
-  // if no resolution is specified.
-  const launchBrowser = await browser.launch({ headless: false });
+  const contextOptions: any = {
+    viewport: width && height ? { width, height } : undefined,
+    userAgent: mergedArgs.userAgent,
+  };
 
-  const context = await launchBrowser.newContext({
-    viewport: width && height ? { width, height } : null,
-    userAgent: userAgent,
-  });
+  if (mergedArgs.recordVideo) {
+    contextOptions.recordVideo = {
+      dir: mergedArgs.videoDir || "./videos",
+    };
+    if (videoWidth && videoHeight) {
+      contextOptions.recordVideo.size = {
+        width: videoWidth,
+        height: videoHeight,
+      };
+    }
+  }
+
+  const launchOptions: any = {
+    headless: false,
+    ...(mergedArgs.proxy ? { proxy: { server: mergedArgs.proxy } } : {}),
+  };
+
+  const launchBrowser = await browser.launch(launchOptions);
+  const context = await launchBrowser.newContext(contextOptions);
 
   const page = await context.newPage();
-  await page.goto(url, { waitUntil: "networkidle" });
+  await page.goto(mergedArgs.url, { waitUntil: "networkidle" });
 
-  if (pdf) {
-    // Generate PDF with specified or default settings
+  if (mergedArgs.pdf) {
     await page.pdf({
-      path: pdf,
-      format: argv.format || "A4", // Use the format specified by the user or default to A4
-      landscape, // Use the landscape option specified by the user
-      printBackground: true, // Ensure background graphics are included
+      path: mergedArgs.pdf,
+      format: mergedArgs.format || "A4",
+      landscape: mergedArgs.landscape,
+      printBackground: true,
     });
-    console.log(`PDF saved to ${pdf}`);
+    console.log(`PDF saved to ${mergedArgs.pdf}`);
   } else {
     console.log(
-      `Navigating to ${url} in ${browserType} with resolution ${width}x${height} and User-Agent: ${
-        userAgent || "default"
-      }`
+      `Navigating to ${mergedArgs.url} in ${
+        mergedArgs.browser
+      } with resolution ${width ? width : "default"}x${
+        height ? height : "default"
+      } and User-Agent: ${mergedArgs.userAgent || "default"}`
     );
   }
 })();
