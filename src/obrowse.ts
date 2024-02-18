@@ -5,7 +5,7 @@ import { hideBin } from "yargs/helpers";
 interface Arguments {
   browser: string;
   url: string;
-  resolution?: string;
+  resolution?: string | null;
   userAgent?: string;
   pdf?: string;
   format?: string; // This could be 'A4', 'Letter', etc., or custom dimensions
@@ -34,7 +34,7 @@ const {
 // Parse the resolution argument to extract width and height
 const [width, height] = resolution
   ? resolution.split("x").map(Number)
-  : [1280, 720];
+  : [null, null];
 
 (async () => {
   let browser: BrowserType<any>;
@@ -60,9 +60,12 @@ const [width, height] = resolution
       process.exit(1);
   }
 
-  const launchBrowser = await browser.launch({ headless: pdf ? true : false });
+  // Launch the browser. Always in headful mode to ensure the window opens.
+  // The window is resizable, and the page content will respond to the size changes.
+  const launchBrowser = await browser.launch({ headless: false});
+
   const context = await launchBrowser.newContext({
-    viewport: { width, height },
+    viewport: width && height ? { width, height } : null,
     userAgent: userAgent,
   });
 
@@ -70,15 +73,14 @@ const [width, height] = resolution
   await page.goto(url, { waitUntil: "networkidle" });
 
   if (pdf) {
+    // Generate PDF with specified or default settings
     await page.pdf({
       path: pdf,
-      format: argv.format || "A4", // Use the format specified in argv or default to 'A4'
-      landscape: landscape, // Use the landscape flag from argv
-      printBackground: true,
+      format: argv.format || "A4", // Use the format specified by the user or default to A4
+      landscape: argv.landscape, // Use the landscape option specified by the user
+      printBackground: true, // Ensure background graphics are included
     });
-    console.log(
-      `PDF saved to ${pdf} in ${landscape ? "landscape" : "portrait"} mode.`
-    );
+    console.log(`PDF saved to ${pdf}`);
   } else {
     console.log(
       `Navigating to ${url} in ${browserType} with resolution ${width}x${height} and User-Agent: ${
@@ -86,6 +88,4 @@ const [width, height] = resolution
       }`
     );
   }
-
-  await launchBrowser.close();
 })();
