@@ -1,79 +1,107 @@
 # OpenBrowse (obrowse)
 
-## Installation on WSL2
+## Introduction
 
-Ensure you have WSL2 and Node.js installed on your system. Node.js is a prerequisite for running `obrowse`. For instructions on installing Node.js, visit [Node.js official website](https://nodejs.org/).
+OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to simplify web browsing tasks directly from your terminal. Whether you need to open specific URLs, generate PDFs of webpages, or simulate different browsing environments, `obrowse` provides a convenient solution.
 
-1. Clone the `obrowse` repository:
-   ```
+## Installation
+
+### Prerequisites
+
+Before installing `obrowse`, ensure you have the following prerequisites:
+
+- **WSL2 (Windows Subsystem for Linux 2):** `obrowse` is primarily designed for use within a WSL2 environment.
+- **Node.js:** Node.js is required to run the `obrowse` CLI tool. If you haven't already installed Node.js, you can download and install it from the [Node.js official website](https://nodejs.org/).
+
+### Installation Steps
+
+1. **Clone the Repository:**
+
+   Begin by cloning the `obrowse` repository to your local machine:
+
+   ```plaintext
    git clone https://github.com/erelsop/obrowse.git ~/src/obrowse
    cd ~/src/obrowse
    ```
 
-2. Install `ts-node` globally to execute TypeScript files directly:
-   ```
+2. **Install Dependencies:**
+
+   Install `ts-node` globally to execute TypeScript files directly:
+
+   ```plaintext
    npm install -g typescript && npm install -g ts-node
    ```
 
-3. Install Playwright and required browsers:
-   Playwright simplifies browser installation by managing compatible versions for testing.
-   ```
+   Additionally, install Playwright and required browsers using the following commands:
+
+   ```plaintext
    npm install
    npx playwright install
    ```
-   Then, to install system dependencies:
-   ```
+
+   To install system dependencies required for Playwright, run:
+
+   ```plaintext
    npx playwright install-deps
    ```
 
-4. **Global Access via Bash Function**:
-   To make `obrowse` easily accessible from anywhere in your terminal, you can define a function in your `.bashrc` or `.zshrc` file:
-   ```
+3. **Global Access via Bash Function:**
+
+   For convenient access to `obrowse` from anywhere in your terminal, you can define a Bash function in your `.bashrc` or `.zshrc` file:
+
+   ```plaintext
    echo "obrowse() { (cd ~/src/obrowse && ts-node src/obrowse.ts \"\$@\") }" >> ~/.bashrc
    source ~/.bashrc
    ```
 
-### Running the CLI Tool
-
-After installation and setup, you can run `obrowse` directly from any location in your terminal, followed by your desired command-line arguments.
-
 ## Usage
 
-**Basic Commands:**
+### Basic Commands
 
-- **Open a URL** in a specific browser:
-  ```
+Use `obrowse` followed by the desired command-line arguments to perform various tasks. Here are some basic commands:
+
+- **Open a URL:**
+
+  ```plaintext
   obrowse --browser chrome --url "https://example.com"
   ```
 
-**Advanced Options:**
+### Advanced Options
 
-- **Generate a PDF** of a webpage (Chromium only):
-  ```
+`obrowse` supports advanced options for customizing your browsing experience:
+
+- **Generate a PDF of a Webpage:**
+
+  ```plaintext
   obrowse --browser chrome --url "https://example.com" --pdf "example.pdf"
   ```
 
-- **Custom Resolution and User-Agent**:
-  ```
+- **Custom Resolution and User-Agent:**
+
+  ```plaintext
   obrowse --browser firefox --url "https://example.com" --resolution "1280x720" --userAgent "custom-user-agent-string"
   ```
 
-- **PDF Generation with Custom Format and Orientation** (Chromium only):
-  ```
+- **PDF Generation with Custom Format and Orientation:**
+
+  ```plaintext
   obrowse --browser chrome --url "https://example.com" --pdf "output.pdf" --format "A4" --landscape
   ```
 
-This tool supports specifying a custom resolution (e.g., "1280x720") and a custom User-Agent string for simulating different devices. PDF generation features allow for specifying the output file path, and for Chromium browsers, additional options like paper format (`--format "A4"`) and orientation (`--landscape`) can be configured.
+For detailed usage instructions and available options, refer to the command-line help accessible via `obrowse --help`.
 
-**Note:** PDF generation is supported exclusively in Chromium-based browsers (`chrome`). Ensure to use the `chrome` browser option when utilizing the PDF generation functionality.
+### Note on PDF Generation
+
+PDF generation is supported exclusively in Chromium-based browsers (`chrome`). Ensure to use the `chrome` browser option when utilizing the PDF generation functionality.
 
 ## Contributing
 
-Contributions are welcome! If you're interested in adding features, fixing bugs, or improving `obrowse`, please feel free to fork the repository, make your changes, and submit a pull request.
+Contributions to `obrowse` are welcome! If you're interested in adding features, fixing bugs, or improving the tool, please feel free to fork the repository, make your changes, and submit a pull request.
 
 ## License
 
-`obrowse` is released under the MIT License. See the LICENSE file for more details.
+`obrowse` is released under the MIT License. For detailed information, see the LICENSE file included in the repository.
+
 
 # Helpful Tips
 
