@@ -1,0 +1,31 @@
+{
+  "name": "obrowse-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/obrowse.js",
+  "bin": {
+    "obrowse": "./dist/obrowse.js"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "start": "node dist/obrowse.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "playwright": "^1.41.2",
+    "tslib": "^2.6.2",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-strip": "^3.0.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/yargs": "^17.0.32",
+    "rollup": "^2.79.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "tree-cli": "^0.6.7",
+    "typescript": "^5.3.3"
+  }
+}
