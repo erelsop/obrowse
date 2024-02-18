@@ -1,4 +1,3 @@
-'''
 # OpenBrowse (obrowse)
 
 ## Introduction
@@ -20,40 +19,40 @@ Before installing `obrowse`, ensure you have the following prerequisites:
 
    Begin by cloning the `obrowse` repository to your local machine:
 
-   '''plaintext
+   ```plaintext
    git clone https://github.com/erelsop/obrowse.git ~/src/obrowse
    cd ~/src/obrowse
-   '''
+   ```
 
 2. **Install Dependencies:**
 
    Install `ts-node` globally to execute TypeScript files directly:
 
-   '''plaintext
+   ```plaintext
    npm install -g typescript && npm install -g ts-node
-   '''
+   ```
 
    Additionally, install Playwright and required browsers using the following commands:
 
-   '''plaintext
+   ```plaintext
    npm install
    npx playwright install
-   '''
+   ```
 
    To install system dependencies required for Playwright, run:
 
-   '''plaintext
+   ```plaintext
    npx playwright install-deps
-   '''
+   ```
 
 3. **Global Access via Bash Function:**
 
    For convenient access to `obrowse` from anywhere in your terminal, you can define a Bash function in your `.bashrc` or `.zshrc` file:
 
-   '''plaintext
+   ```plaintext
    echo "obrowse() { (cd ~/src/obrowse && ts-node src/obrowse.ts \"\$@\") }" >> ~/.bashrc
    source ~/.bashrc
-   '''
+   ```
 
 ## Usage
 
@@ -63,9 +62,9 @@ Use `obrowse` followed by the desired command-line arguments to perform various 
 
 - **Open a URL:**
 
-  '''plaintext
+  ```plaintext
   obrowse --browser chrome --url "https://example.com"
-  '''
+  ```
 
 ### Advanced Options
 
@@ -85,9 +84,9 @@ To use a configuration file, specify the path using the `--cfg` option. This all
 
 Example command with configuration file:
 
-'''plaintext
+```plaintext
 obrowse --cfg path/to/your/config.json
-'''
+```
 
 This simplifies repeated use cases and makes it easy to share configurations between team members or across projects.
 
@@ -109,52 +108,52 @@ Below are some User-Agent strings you can use with `obrowse` to simulate differe
 
 - **Google Chrome on Windows 10**:
 
-  '''
+  ```
   Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36
-  '''
+  ```
 
 - **Mozilla Firefox on macOS**:
 
-  '''
+  ```
   Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:73.0) Gecko/20100101 Firefox/73.0
-  '''
+  ```
 
 - **Safari on macOS**:
-  '''
+  ```
   Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Safari/605.1.15
-  '''
+  ```
 
 ### Mobile Browsers
 
 - **Google Chrome on Android**:
 
-  '''
+  ```
   Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36
-  '''
+  ```
 
 - **Safari on iPhone (iOS)**:
 
-  '''
+  ```
   Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Mobile/15E148 Safari/604.1
-  '''
+  ```
 
 - **Mozilla Firefox on Android**:
-  '''
+  ```
   Mozilla/5.0 (Android 10; Mobile; rv:68.0) Gecko/68.0 Firefox/68.0
-  '''
+  ```
 
 ### Tablets
 
 - **Google Chrome on iPad (iOS)**:
 
-  '''
+  ```
   Mozilla/5.0 (iPad; CPU OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/80.0.3987.95 Mobile/15E148 Safari/604.1
-  '''
+  ```
 
 - **Safari on iPad (iOS)**:
-  '''
+  ```
   Mozilla/5.0 (iPad; CPU OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Mobile/15E148 Safari/604.1
-  '''
+  ```
 
 Feel free to use these User-Agent strings to simulate different browsing environments with `obrowse`. This can be very useful for responsive design testing, SEO optimization, and ensuring compatibility across various devices and browsers.
-'''
+```
