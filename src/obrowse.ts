@@ -13,13 +13,42 @@ interface Arguments {
 }
 
 const argv = yargs(hideBin(process.argv)).options({
-  browser: { type: "string", demandOption: true },
-  url: { type: "string", demandOption: true },
-  resolution: { type: "string", optional: true },
-  userAgent: { type: "string", optional: true },
-  pdf: { type: "string", optional: true },
-  format: { type: "string", optional: true },
-  landscape: { type: "boolean", default: false },
+  browser: {
+    type: "string",
+    demandOption: true,
+    description: "Specify the browser to use (chrome, firefox, safari).",
+  },
+  url: {
+    type: "string",
+    demandOption: true,
+    description: "The URL to open.",
+  },
+  resolution: {
+    type: "string",
+    optional: true,
+    description: "Custom resolution for the browser window (e.g., '1280x720').",
+  },
+  userAgent: {
+    type: "string",
+    optional: true,
+    description: "Custom User-Agent string to simulate different devices.",
+  },
+  pdf: {
+    type: "string",
+    optional: true,
+    description: "Generate a PDF of the webpage (Chromium only).",
+  },
+  format: {
+    type: "string",
+    optional: true,
+    description:
+      "Specify the format for PDF generation (e.g., 'A4', 'Letter').",
+  },
+  landscape: {
+    type: "boolean",
+    default: false,
+    description: "Generate PDF in landscape orientation (Chromium only).",
+  },
 }).argv as Arguments;
 
 const {
@@ -63,7 +92,7 @@ const [width, height] = resolution
   // Launch the browser. Always in headful mode to ensure the window opens.
   // The window is resizable, and the page content will respond to the size changes
   // if no resolution is specified.
-  const launchBrowser = await browser.launch({ headless: false});
+  const launchBrowser = await browser.launch({ headless: false });
 
   const context = await launchBrowser.newContext({
     viewport: width && height ? { width, height } : null,
