@@ -2,7 +2,7 @@
 
 ## Introduction
 
-OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to simplify web browsing tasks directly from your terminal. Whether you need to open specific URLs, generate PDFs of webpages, or simulate different browsing environments, `obrowse` provides a convenient solution.
+OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to simplify web browsing tasks directly from your terminal. Whether you need to open specific URLs, generate PDFs of webpages, or simulate different browsing environments, `obrowse` provides a convenient solution. While primarily designed for WSL2 (Windows Subsystem for Linux 2), `obrowse` is expected to work seamlessly in any Unix-like environment.
 
 ## Installation
 
@@ -10,7 +10,7 @@ OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to sim
 
 Before installing `obrowse`, ensure you have the following prerequisites:
 
-- **WSL2 (Windows Subsystem for Linux 2):** `obrowse` is primarily designed for use within a WSL2 environment.
+- **WSL2 (Windows Subsystem for Linux 2):** `obrowse` is primarily designed for use within a WSL2 environment, but will likely function as expected in any Unix-like environment.
 - **Node.js:** Node.js is required to run the `obrowse` CLI tool. If you haven't already installed Node.js, you can download and install it from the [Node.js official website](https://nodejs.org/).
 
 ### Installation Steps
@@ -101,7 +101,6 @@ Contributions to `obrowse` are welcome! If you're interested in adding features,
 ## License
 
 `obrowse` is released under the MIT License. For detailed information, see the LICENSE file included in the repository.
-
 
 # Helpful Tips
 
