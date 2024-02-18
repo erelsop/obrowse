@@ -3,33 +3,33 @@
 Ensure you have WSL2 and Node.js installed on your system. Node.js is a prerequisite for running `obrowse`. For instructions on installing Node.js, visit [Node.js official website](https://nodejs.org/).
 
 1. Clone the `obrowse` repository:
-   '''
+   ```
    git clone https://github.com/erelsop/obrowse.git ~/src/obrowse
    cd ~/src/obrowse
-   '''
+   ```
 
 2. Install `ts-node` globally to execute TypeScript files directly:
-   '''
+   ```
    npm install -g typescript && npm install -g ts-node
-   '''
+   ```
 
 3. Install Playwright and required browsers:
    Playwright simplifies browser installation by managing compatible versions for testing.
-   '''
+   ```
    npm install
    npx playwright install
-   '''
+   ```
    Then, to install system dependencies:
-   '''
+   ```
    npx playwright install-deps
-   '''
+   ```
 
 4. **Global Access via Bash Function**:
    To make `obrowse` easily accessible from anywhere in your terminal, you can define a function in your `.bashrc` or `.zshrc` file:
-   '''
+   ```
    echo "obrowse() { (cd ~/src/obrowse && ts-node src/obrowse.ts \"\$@\") }" >> ~/.bashrc
    source ~/.bashrc
-   '''
+   ```
 
 ### Running the CLI Tool
 
@@ -40,26 +40,26 @@ After installation and setup, you can run `obrowse` directly from any location i
 **Basic Commands:**
 
 - **Open a URL** in a specific browser:
-  '''
+  ```
   obrowse --browser chrome --url "https://example.com"
-  '''
+  ```
 
 **Advanced Options:**
 
 - **Generate a PDF** of a webpage (Chromium only):
-  '''
+  ```
   obrowse --browser chrome --url "https://example.com" --pdf "example.pdf"
-  '''
+  ```
 
 - **Custom Resolution and User-Agent**:
-  '''
+  ```
   obrowse --browser firefox --url "https://example.com" --resolution "1280x720" --userAgent "custom-user-agent-string"
-  '''
+  ```
 
 - **PDF Generation with Custom Format and Orientation** (Chromium only):
-  '''
+  ```
   obrowse --browser chrome --url "https://example.com" --pdf "output.pdf" --format "A4" --landscape
-  '''
+  ```
 
 This tool supports specifying a custom resolution (e.g., "1280x720") and a custom User-Agent string for simulating different devices. PDF generation features allow for specifying the output file path, and for Chromium browsers, additional options like paper format (`--format "A4"`) and orientation (`--landscape`) can be configured.
 
