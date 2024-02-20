@@ -78,7 +78,79 @@ Use `obrowse` followed by the desired command-line arguments to perform various 
 
 For detailed usage instructions and available options, refer to the command-line help accessible via `obrowse --help`.
 
-### Configuration File
+### Integrated Testing with Jest and Mocha
+
+`obrowse` now supports integrated testing, allowing users to run automated tests for their web applications using Jest and Mocha directly through the CLI. This feature simplifies the process of setting up and executing browser-based tests, making it easier to incorporate into your development workflow.
+
+#### Setting Up Tests
+
+To utilize the testing functionality, ensure your tests are prepared in either Jest or Mocha. Specify the testing framework and the test file path using the `--testFrame` and `--testFile` command-line arguments, respectively.
+
+##### For Jest:
+
+Ensure Jest is installed in your project, and write your tests as you normally would. For example:
+
+```javascript
+// googleJest.test.js
+const { chromium } = require('playwright');
+
+describe('Google Page Test with Jest', () => {
+  it('should open google.com and check the title', async () => {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto('https://google.com');
+    expect(await page.title()).toBe('Google');
+    await browser.close();
+  });
+});
+```
+
+##### For Mocha:
+
+For Mocha users, ensure Mocha and Chai are included in your project for testing and assertions. When writing Mocha tests, it's important to note that tests using ES Module syntax should use the `.mjs` extension or configure Mocha to work with ES Module syntax in `.js` files:
+
+```javascript
+// googleMocha.test.js
+import { expect } from 'chai';
+import { chromium } from 'playwright';
+
+describe('Google Page Test with Mocha', function() {
+  it('should open google.com and check the title', async function() {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto('https://google.com');
+    const title = await page.title();
+    expect(title).to.equal('Google');
+    await browser.close();
+  });
+});
+```
+
+#### Running Tests
+
+To run your tests through `obrowse`, use the following command, replacing `<framework>` with either `jest` or `mocha`, and `<path_to_test_file>` with the path to your test file:
+
+```bash
+obrowse --testFrame <framework> --testFile <path_to_test_file>
+```
+
+Example using Jest:
+
+```bash
+obrowse --testFrame jest --testFile "./tests/googleJest.test.js"
+```
+
+Example using Mocha:
+
+```bash
+obrowse --testFrame mocha --testFile "./tests/googleMocha.test.mjs"
+```
+
+### Note on File Extensions for Tests
+
+When writing tests with Mocha in projects that use ES Modules, your test files might need to use the `.mjs` extension to be correctly recognized as ES Modules by Node.js. This requirement depends on your project's configuration and how ES Modules are set up. If your tests are written as ES Modules, ensure to name your test files with `.mjs` extensions or configure your project to support ES Module syntax in `.js` files. This guidance ensures compatibility and proper execution of your tests.
+
+#### Configuration File
 
 To use a configuration file, specify the path using the `--cfg` option. This allows you to predefine settings like browser type, URL, custom resolution, proxy settings, and more.
 
@@ -100,7 +172,9 @@ The configuration file allows you to predefine settings for `obrowse`, making it
   "recordVideo": true | false, // Enables or disables video recording
   "videoSize": "WIDTHxHEIGHT", // Example: "1280x720"
   "videoDir": "path/to/videos", // Directory to save videos
-  "proxy": "http://localhost:8080" // Proxy server URL
+  "proxy": "http://localhost:8080", // Proxy server URL
+  "testFrame": "jest | mocha" // Test framework to use
+  "testFile": "path/to/testFile.js"
 }
 ```
 
@@ -115,6 +189,8 @@ The configuration file allows you to predefine settings for `obrowse`, making it
 - **`videoSize`**: Specifies the size of the video recording. Format should be `widthxheight` (e.g., `"1280x720"`).
 - **`videoDir`**: The directory where video recordings are saved.
 - **`proxy`**: Sets a proxy server for the browser session.
+- **`testFrame`**: Specifies the testing framework to use for integrated testing. Accepted values are `jest` or `mocha`.
+- **`testFile`**: The path to the test file to be executed. This allows for automated testing alongside web browsing tasks, streamlining the testing process for web applications.
 
 Please ensure your configuration file matches this schema to avoid errors. You can specify the path to your configuration file when running `obrowse` with the `--cfg` option.
 
@@ -123,7 +199,6 @@ Example command using a configuration file:
 ```bash
 obrowse --cfg "path/to/your/config.json"
 ```
-
 
 ## Contributing
 
