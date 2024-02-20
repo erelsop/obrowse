@@ -145,11 +145,11 @@ Example using Mocha:
 obrowse --testFrame mocha --testFile "./tests/googleMocha.test.mjs"
 ```
 
-### Note on File Extensions for Tests
+#### Note on File Extensions for Tests
 
 When writing tests with Mocha in projects that use ES Modules, your test files might need to use the `.mjs` extension to be correctly recognized as ES Modules by Node.js. This requirement depends on your project's configuration and how ES Modules are set up. If your tests are written as ES Modules, ensure to name your test files with `.mjs` extensions or configure your project to support ES Module syntax in `.js` files. This guidance ensures compatibility and proper execution of your tests.
 
-#### Configuration File
+### Configuration File
 
 To use a configuration file, specify the path using the `--cfg` option. This allows you to predefine settings like browser type, URL, custom resolution, proxy settings, and more.
 
