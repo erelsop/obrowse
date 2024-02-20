@@ -1,7 +1,7 @@
 import fs from "fs";
 
 // Function to load and parse the configuration file
-function loadConfig(filePath: string | undefined) {
+function loadConfig(filePath: string | undefined, args: any) {
   try {
     if (!filePath) {
       console.error("No configuration file provided.");

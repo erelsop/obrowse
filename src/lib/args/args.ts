@@ -16,20 +16,24 @@ import { hideBin } from "yargs/helpers";
  * @property {string} videoDir - The directory to save the video.
  * @property {string} proxy - The proxy server to use.
  * @property {string} cfg - The path to the configuration file.
+ * @property {string} testFrame - The testing framework to use (`jest` or `mocha`)
+ * @property {string} testFile - The path to the test file.
  */
 export interface Arguments {
-  browser: string;
-  url: string;
+  browser: "chrome" | "firefox" | "safari";
+  url: string; 
   resolution?: string;
   userAgent?: string;
-  pdf?: string;
-  format?: string; // This could be 'A4', 'Letter', etc., or custom dimensions
+  pdf?: string; 
+  format?: string; 
   landscape?: boolean;
   recordVideo?: boolean;
   videoSize?: string;
   videoDir?: string;
   proxy?: string;
   cfg?: string;
+  testFrame?: "jest" | "mocha";
+  testFile?: string;
 }
 
 const argv = yargs(hideBin(process.argv)).options({
@@ -91,9 +95,19 @@ const argv = yargs(hideBin(process.argv)).options({
   },
   cfg: {
     type: "string",
-    demandOption: true,
+    optional: true,
     description: "Path to the configuration file.",
   },
+  testFrame: {
+    type: "string",
+    optional: true,
+    description: "The testing framework to use (`jest` or `mocha`)"
+  },
+  testFile: {
+    type: "string",
+    optional: true,
+    description: "The path to the test file."
+  }
 }).argv as Arguments;
 
 export default argv;

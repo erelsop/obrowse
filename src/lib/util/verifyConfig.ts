@@ -15,6 +15,8 @@ function verifyConfig(cfg: any): Arguments {
     videoDir: 'string',
     proxy: 'string',
     cfg: 'string',
+    testFrame: 'string',
+    testFile: 'string',
   };
 
   // Collect errors for detailed feedback
