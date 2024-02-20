@@ -75,6 +75,7 @@ Use `obrowse` followed by the desired command-line arguments to perform various 
 - **Browser Session Recording:** Record browser sessions into video files, useful for bug reporting and tutorials.
 - **Proxy Support:** Specify a proxy server for the browser session, aiding in testing geo-specific content or privacy-focused browsing.
 - **Configuration File Support:** Use a configuration file to save commonly used settings, streamlining the process of initiating browser sessions.
+- **Integrated Testing:** Run automated browser tests using Jest or Mocha directly through the CLI. This feature allows users to specify a testing framework and test files for automated testing alongside their web browsing tasks.
 
 For detailed usage instructions and available options, refer to the command-line help accessible via `obrowse --help`.
 
@@ -91,7 +92,6 @@ To utilize the testing functionality, ensure your tests are prepared in either J
 Ensure Jest is installed in your project, and write your tests as you normally would. For example:
 
 ```javascript
-// googleJest.test.js
 const { chromium } = require('playwright');
 
 describe('Google Page Test with Jest', () => {
@@ -110,7 +110,6 @@ describe('Google Page Test with Jest', () => {
 For Mocha users, ensure Mocha and Chai are included in your project for testing and assertions. When writing Mocha tests, it's important to note that tests using ES Module syntax should use the `.mjs` extension or configure Mocha to work with ES Module syntax in `.js` files:
 
 ```javascript
-// googleMocha.test.js
 import { expect } from 'chai';
 import { chromium } from 'playwright';
 
