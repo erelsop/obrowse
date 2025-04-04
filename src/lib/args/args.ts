@@ -18,6 +18,7 @@ import { hideBin } from "yargs/helpers";
  * @property {string} cfg - The path to the configuration file.
  * @property {string} testFrame - The testing framework to use (`jest` or `mocha`)
  * @property {string} testFile - The path to the test file.
+ * @property {boolean} headless - Whether to run the browser in headless mode.
  */
 export interface Arguments {
   browser: "chrome" | "firefox" | "safari";
@@ -34,6 +35,7 @@ export interface Arguments {
   cfg?: string;
   testFrame?: "jest" | "mocha";
   testFile?: string;
+  headless?: boolean;
 }
 
 const argv = yargs(hideBin(process.argv)).options({
@@ -107,6 +109,11 @@ const argv = yargs(hideBin(process.argv)).options({
     type: "string",
     optional: true,
     description: "The path to the test file."
+  },
+  headless: {
+    type: "boolean",
+    optional: true,
+    description: "Whether to run the browser in headless mode (useful for CI/CD)."
   }
 }).argv as Arguments;
 

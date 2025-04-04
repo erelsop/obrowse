@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { webkit, firefox, chromium, BrowserType } from "playwright";
 import argv from "./lib/args/args";
 import CaseConverter from "./lib/util/CaseConverter";
@@ -45,7 +47,22 @@ if (!mergedArgs.browser || !mergedArgs.url) {
 }
 
 (async () => {
+  let launchBrowser: any;
+  
   try {
+    // Process termination handlers
+    const handleTermination = async () => {
+      console.log("\nReceived termination signal. Closing browser...");
+      if (launchBrowser) {
+        await launchBrowser.close().catch(() => {});
+      }
+      process.exit(0);
+    };
+
+    // Add event listeners for signals
+    process.on('SIGINT', handleTermination);
+    process.on('SIGTERM', handleTermination);
+    
     // Prepare browser tasks
     const browserTasks = (async () => {
       let browser: BrowserType<any>;
@@ -94,11 +111,11 @@ if (!mergedArgs.browser || !mergedArgs.url) {
       }
 
       const launchOptions: any = {
-        headless: false,
+        headless: mergedArgs.headless === true,
         ...(mergedArgs.proxy ? { proxy: { server: mergedArgs.proxy } } : {}),
       };
 
-      const launchBrowser = await browser.launch(launchOptions);
+      launchBrowser = await browser.launch(launchOptions);
       const context = await launchBrowser.newContext(contextOptions);
 
       // Listen for the 'close' event on the context
@@ -138,5 +155,9 @@ if (!mergedArgs.browser || !mergedArgs.url) {
     await Promise.all([browserTasks, testingTasks]);
   } catch (error) {
     console.error("An error occurred:", error);
+    if (launchBrowser) {
+      await launchBrowser.close().catch(() => {});
+    }
+    process.exit(1);
   }
 })();

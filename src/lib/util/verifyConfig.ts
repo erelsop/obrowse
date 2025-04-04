@@ -17,6 +17,7 @@ function verifyConfig(cfg: any): Arguments {
     cfg: 'string',
     testFrame: 'string',
     testFile: 'string',
+    headless: 'boolean',
   };
 
   // Collect errors for detailed feedback
@@ -44,7 +45,7 @@ function verifyConfig(cfg: any): Arguments {
   });
 
   // Handle optional boolean values correctly by checking their existence rather than type only
-  ['landscape', 'recordVideo'].forEach(key => {
+  ['landscape', 'recordVideo', 'headless'].forEach(key => {
     if (cfg.hasOwnProperty(key) && typeof cfg[key] !== 'boolean') {
       errors.push(`Expected '${key}' to be of type 'boolean', but got '${typeof cfg[key]}'.`);
     }
