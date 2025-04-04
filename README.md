@@ -26,23 +26,29 @@ Before installing `obrowse`, ensure you have the following prerequisites:
 
 2. **Install Dependencies:**
 
-   Install `ts-node` globally to execute TypeScript files directly:
+   Install `ts-node` globally to execute TypeScript files directly from the command line:
 
    ```bash
    npm install -g typescript && npm install -g ts-node
    ```
 
-   Additionally, install Playwright and required browsers using the following commands:
+   Then install all project dependencies, including local development dependencies:
 
    ```bash
    npm install
-   npx playwright install
+   npm run install-browsers
    ```
 
    To install system dependencies required for Playwright, run:
 
    ```bash
-   npx playwright install-deps
+   npm run install-deps
+   ```
+
+   If you want to build the project for distribution, use:
+
+   ```bash
+   npm run build
    ```
 
 3. **Global Access via Bash Function:**
@@ -75,6 +81,7 @@ Use `obrowse` followed by the desired command-line arguments to perform various 
 - **Browser Session Recording:** Record browser sessions into video files, useful for bug reporting and tutorials.
 - **Proxy Support:** Specify a proxy server for the browser session, aiding in testing geo-specific content or privacy-focused browsing.
 - **Configuration File Support:** Use a configuration file to save commonly used settings, streamlining the process of initiating browser sessions.
+- **Headless Mode:** Run browsers in headless mode without a visible UI, useful for CI/CD environments and automated testing.
 - **Integrated Testing:** Run automated browser tests using Jest or Mocha directly through the CLI. This feature allows users to specify a testing framework and test files for automated testing alongside their web browsing tasks.
 
 For detailed usage instructions and available options, refer to the command-line help accessible via `obrowse --help`.
@@ -145,139 +152,54 @@ Example using Mocha:
 obrowse --testFrame mocha --testFile "./tests/googleMocha.test.mjs"
 ```
 
-#### Note on File Extensions for Tests
+### Running Tests
 
-When writing tests with Mocha in projects that use ES Modules, your test files might need to use the `.mjs` extension to be correctly recognized as ES Modules by Node.js. This requirement depends on your project's configuration and how ES Modules are set up. If your tests are written as ES Modules, ensure to name your test files with `.mjs` extensions or configure your project to support ES Module syntax in `.js` files. This guidance ensures compatibility and proper execution of your tests.
-
-### Configuration File
-
-To use a configuration file, specify the path using the `--cfg` option. This allows you to predefine settings like browser type, URL, custom resolution, proxy settings, and more.
-
-This simplifies repeated use cases and makes it easy to share configurations between team members or across projects.
-
-#### Configuration File Schema
-
-The configuration file allows you to predefine settings for `obrowse`, making it easier to manage and reuse configurations. The file should be in JSON format and can include any of the following properties:
-
-```plaintext
-{
-  "browser": "chrome | firefox | safari",
-  "url": "https://example.com",
-  "resolution": "WIDTHxHEIGHT", // Example: "1920x1080"
-  "userAgent": "custom user agent string",
-  "pdf": "path/to/output.pdf",
-  "format": "A4 | Letter | etc.", // PDF format
-  "landscape": true | false, // PDF orientation
-  "recordVideo": true | false, // Enables or disables video recording
-  "videoSize": "WIDTHxHEIGHT", // Example: "1280x720"
-  "videoDir": "path/to/videos", // Directory to save videos
-  "proxy": "http://localhost:8080", // Proxy server URL
-  "testFrame": "jest | mocha" // Test framework to use
-  "testFile": "path/to/testFile.js"
-}
-```
-
-- **`browser`**: Specifies the browser to use. Accepted values are `chrome`, `firefox`, or `safari`.
-- **`url`**: The URL to navigate to in the browser session.
-- **`resolution`**: Sets the browser window's resolution. Format should be `widthxheight` (e.g., `"1920x1080"`).
-- **`userAgent`**: Allows setting a custom User-Agent string.
-- **`pdf`**: If specified, `obrowse` will generate a PDF of the page at the provided URL. The value should be the path where the PDF is saved.
-- **`format`**: Defines the PDF format. Common values include `A4`, `Letter`, etc.
-- **`landscape`**: Sets the orientation of the PDF to landscape (`true`) or portrait (`false`).
-- **`recordVideo`**: Enables recording of the browser session into a video file when set to `true`.
-- **`videoSize`**: Specifies the size of the video recording. Format should be `widthxheight` (e.g., `"1280x720"`).
-- **`videoDir`**: The directory where video recordings are saved.
-- **`proxy`**: Sets a proxy server for the browser session.
-- **`testFrame`**: Specifies the testing framework to use for integrated testing. Accepted values are `jest` or `mocha`.
-- **`testFile`**: The path to the test file to be executed. This allows for automated testing alongside web browsing tasks, streamlining the testing process for web applications.
-
-Please ensure your configuration file matches this schema to avoid errors. You can specify the path to your configuration file when running `obrowse` with the `--cfg` option.
-
-Example command using a configuration file:
+The project includes a comprehensive test suite to verify functionality. To run the tests:
 
 ```bash
-obrowse --cfg "path/to/your/config.json"
+# Build the project first
+npm run build
+
+# Run all tests
+npm test
+
+# Run only unit tests
+npm run test:unit
+
+# Run only integration tests
+npm run test:integration
+
+# Run only end-to-end tests
+npm run test:e2e
+
+# Generate test coverage report
+npm run test:coverage
 ```
+
+#### Test Coverage
+
+The test suite includes:
+
+1. **Unit Tests**:
+   - Configuration file handling and validation
+   - Case conversion functionality
+   - Argument parsing
+   - Configuration loading and verification
+
+2. **Integration Tests**: 
+   - Browser functionality validation (launching, headless mode, proxy)
+   - PDF generation capabilities
+   - Test framework integration (Jest and Mocha adapters)
+
+3. **End-to-End Tests**:
+   - CLI functionality validation
+   - Configuration file handling
+   - Error reporting
+
+All tests are written using Jest with TypeScript, following the naming convention `*.test.ts`.
 
 ## Contributing
 
 Contributions to `obrowse` are welcome! If you're interested in adding features, fixing bugs, or improving the tool, please feel free to fork the repository, make your changes, and submit a pull request.
 
 ## License
-
-`obrowse` is released under the MIT License. For detailed information, see the LICENSE file included in the repository.
-
-# Helpful Tips
-
-## Useful User-Agent Strings
-
-Below are some User-Agent strings you can use with `obrowse` to simulate different devices and browsers. This can be particularly useful for testing how your web application responds to various clients.
-
-### Desktop Browsers
-
-- **Google Chrome on Windows 10**:
-
-```
-
-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36
-
-```
-
-- **Mozilla Firefox on macOS**:
-
-```
-
-Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:73.0) Gecko/20100101 Firefox/73.0
-
-```
-
-- **Safari on macOS**:
-```
-
-Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Safari/605.1.15
-
-```
-
-### Mobile Browsers
-
-- **Google Chrome on Android**:
-
-```
-
-Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36
-
-```
-
-- **Safari on iPhone (iOS)**:
-
-```
-
-Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Mobile/15E148 Safari/604.1
-
-```
-
-- **Mozilla Firefox on Android**:
-```
-
-Mozilla/5.0 (Android 10; Mobile; rv:68.0) Gecko/68.0 Firefox/68.0
-
-```
-
-### Tablets
-
-- **Google Chrome on iPad (iOS)**:
-
-```
-
-Mozilla/5.0 (iPad; CPU OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/80.0.3987.95 Mobile/15E148 Safari/604.1
-
-```
-
-- **Safari on iPad (iOS)**:
-```
-
-Mozilla/5.0 (iPad; CPU OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.5 Mobile/15E148 Safari/604.1
-
-```
-
-Feel free to use these User-Agent strings to simulate different browsing environments with `obrowse`. This can be very useful for responsive design testing, SEO optimization, and ensuring compatibility across various devices and browsers.

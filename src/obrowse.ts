@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { webkit, firefox, chromium, BrowserType } from "playwright";
 import argv from "./lib/args/args";
 import CaseConverter from "./lib/util/CaseConverter";

@@ -7,12 +7,13 @@ export default {
     {
       file: 'dist/obrowse.js',
       format: 'cjs',
+      banner: '#!/usr/bin/env node',
     },
   ],
   plugins: [
     strip({
       include: '**/*.ts',
-      labels: ['shebang'],
+      labels: ['debug', 'assert.*', 'alert'],
       functions: ['console.log', 'assert.*', 'debug', 'alert'],
     }),
     typescript(),
