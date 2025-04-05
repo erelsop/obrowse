@@ -201,5 +201,3 @@ All tests are written using Jest with TypeScript, following the naming conventio
 ## Contributing
 
 Contributions to `obrowse` are welcome! If you're interested in adding features, fixing bugs, or improving the tool, please feel free to fork the repository, make your changes, and submit a pull request.
-
-## License
