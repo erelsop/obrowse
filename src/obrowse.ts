@@ -188,10 +188,23 @@ console.log('');
           printBackground: true,
         });
         console.log(`✅ PDF saved to: ${mergedArgs.pdf}`);
+        
+        // Close browser after PDF generation
+        await launchBrowser.close();
+        console.log(`🔒 Browser closed. Task completed!`);
+        return; // Exit the browser tasks function
       } else {
         console.log(`✅ Page loaded successfully!`);
         if (!mergedArgs.headless) {
           console.log(`👀 Browser window is open. Press Ctrl+C to close.`);
+          // Keep browser open for interactive use
+        } else {
+          // In headless mode without PDF, close after a brief moment
+          console.log(`⏳ Headless mode - closing in 3 seconds...`);
+          setTimeout(async () => {
+            await launchBrowser.close();
+            console.log(`🔒 Browser closed. Task completed!`);
+          }, 3000);
         }
       }
     })();
