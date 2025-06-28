@@ -1,7 +1,7 @@
 {
   "name": "obrowse-cli",
   "version": "1.0.0",
-  "description": "A CLI tool for browser automation, testing, and PDF generation using Playwright",
+  "description": "A Linux-focused CLI tool for browser automation, cross-browser testing, and PDF generation using Playwright. Supports Chrome, Firefox, and WebKit/Safari testing.",
   "main": "dist/obrowse.js",
   "bin": {
     "obrowse": "./dist/obrowse.js"
@@ -18,7 +18,21 @@
     "test:e2e": "jest --testPathPattern=tests/e2e",
     "test:coverage": "jest --coverage"
   },
-  "keywords": [],
+  "keywords": [
+    "browser-automation",
+    "testing",
+    "pdf-generation",
+    "playwright",
+    "cli",
+    "linux",
+    "cross-browser",
+    "webkit",
+    "safari",
+    "chrome",
+    "firefox",
+    "jest",
+    "mocha"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

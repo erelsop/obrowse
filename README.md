@@ -2,7 +2,7 @@
 
 ## Introduction
 
-OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to simplify web browsing tasks directly from your terminal. Whether you need to open specific URLs, generate PDFs of webpages, simulate different browsing environments, or record browser sessions, `obrowse` provides a convenient solution. While primarily designed for WSL2 (Windows Subsystem for Linux 2), `obrowse` is expected to work seamlessly in any Unix-like environment.
+OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to simplify web browsing tasks directly from your terminal. Whether you need to open specific URLs, generate PDFs of webpages, simulate different browsing environments, or record browser sessions, `obrowse` provides a convenient solution. Built for Linux environments with cross-browser support including WebKit/Safari testing capabilities.
 
 ## Installation
 
@@ -10,7 +10,7 @@ OpenBrowse, or `obrowse`, is a command-line interface (CLI) tool designed to sim
 
 Before installing `obrowse`, ensure you have the following prerequisites:
 
-- **WSL2 (Windows Subsystem for Linux 2):** `obrowse` is primarily designed for use within a WSL2 environment, but will likely function as expected in any Unix-like environment.
+- **Linux Environment:** `obrowse` is designed for Linux environments. It may work in other Unix-like systems including WSL2, but Linux is the primary target platform.
 - **Node.js:** Node.js is required to run the `obrowse` CLI tool. If you haven't already installed Node.js, you can download and install it from the [Node.js official website](https://nodejs.org/).
 
 ### Installation Steps
@@ -26,16 +26,11 @@ Before installing `obrowse`, ensure you have the following prerequisites:
 
 2. **Install Dependencies:**
 
-   Install `ts-node` globally to execute TypeScript files directly from the command line:
-
-   ```bash
-   npm install -g typescript && npm install -g ts-node
-   ```
-
-   Then install all project dependencies, including local development dependencies:
+   Install all project dependencies and build the distributable version:
 
    ```bash
    npm install
+   npm run build
    npm run install-browsers
    ```
 
@@ -45,18 +40,19 @@ Before installing `obrowse`, ensure you have the following prerequisites:
    npm run install-deps
    ```
 
-   If you want to build the project for distribution, use:
+3. **Global Access via Symlink or Bash Function:**
 
+   **Option A: Symlink (Recommended)**
    ```bash
-   npm run build
+   sudo ln -s $(pwd)/dist/obrowse.js /usr/local/bin/obrowse
+   chmod +x dist/obrowse.js
    ```
 
-3. **Global Access via Bash Function:**
-
+   **Option B: Bash Function**
    For convenient access to `obrowse` from anywhere in your terminal, you can define a Bash function in your `.bashrc` or `.zshrc` file:
 
    ```bash
-   echo "obrowse() { (cd ~/src/obrowse && ts-node src/obrowse.ts \"\$@\") }" >> ~/.bashrc
+   echo "obrowse() { node ~/src/obrowse/dist/obrowse.js \"\$@\" }" >> ~/.bashrc
    source ~/.bashrc
    ```
 
@@ -72,6 +68,12 @@ Use `obrowse` followed by the desired command-line arguments to perform various 
   obrowse --browser chrome --url "https://example.com"
   ```
 
+- **Generate PDF:**
+
+  ```bash
+  obrowse --browser chrome --url "https://example.com" --headless --pdf "webpage.pdf"
+  ```
+
 ### Advanced Options
 
 `obrowse` supports advanced options for customizing your browsing experience, including:
@@ -83,6 +85,7 @@ Use `obrowse` followed by the desired command-line arguments to perform various 
 - **Configuration File Support:** Use a configuration file to save commonly used settings, streamlining the process of initiating browser sessions.
 - **Headless Mode:** Run browsers in headless mode without a visible UI, useful for CI/CD environments and automated testing.
 - **Integrated Testing:** Run automated browser tests using Jest or Mocha directly through the CLI. This feature allows users to specify a testing framework and test files for automated testing alongside their web browsing tasks.
+- **Cross-Browser Testing:** Test your applications in Chrome, Firefox, and WebKit/Safari environments on Linux.
 
 For detailed usage instructions and available options, refer to the command-line help accessible via `obrowse --help`.
 
