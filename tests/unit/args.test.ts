@@ -4,7 +4,14 @@ import * as yargs from 'yargs';
 jest.mock('yargs/yargs', () => {
   return jest.fn().mockImplementation(() => {
     return {
+      usage: jest.fn().mockReturnThis(),
+      example: jest.fn().mockReturnThis(),
       options: jest.fn().mockReturnThis(),
+      help: jest.fn().mockReturnThis(),
+      version: jest.fn().mockReturnThis(),
+      strict: jest.fn().mockReturnThis(),
+      showHelpOnFail: jest.fn().mockReturnThis(),
+      epilogue: jest.fn().mockReturnThis(),
       argv: {
         browser: 'chrome',
         url: 'https://example.com'
@@ -37,10 +44,25 @@ describe('Arguments Handling', () => {
     expect(typeof ArgsModule.default).toBe('object');
   });
   
-  test('should define all expected options', () => {
+  test('should define all expected options and setup methods', () => {
+    const mockUsage = jest.fn().mockReturnThis();
+    const mockExample = jest.fn().mockReturnThis();
     const mockOptions = jest.fn().mockReturnThis();
+    const mockHelp = jest.fn().mockReturnThis();
+    const mockVersion = jest.fn().mockReturnThis();
+    const mockStrict = jest.fn().mockReturnThis();
+    const mockShowHelpOnFail = jest.fn().mockReturnThis();
+    const mockEpilogue = jest.fn().mockReturnThis();
+    
     const mockYargs = {
+      usage: mockUsage,
+      example: mockExample,
       options: mockOptions,
+      help: mockHelp,
+      version: mockVersion,
+      strict: mockStrict,
+      showHelpOnFail: mockShowHelpOnFail,
+      epilogue: mockEpilogue,
       argv: {}
     };
     
@@ -51,10 +73,17 @@ describe('Arguments Handling', () => {
       require('../../src/lib/args/args');
     });
     
-    // Check that all required options were defined
+    // Check that all setup methods were called
+    expect(mockUsage).toHaveBeenCalled();
+    expect(mockExample).toHaveBeenCalled();
     expect(mockOptions).toHaveBeenCalled();
+    expect(mockHelp).toHaveBeenCalled();
+    expect(mockVersion).toHaveBeenCalled();
+    expect(mockStrict).toHaveBeenCalled();
+    expect(mockShowHelpOnFail).toHaveBeenCalled();
+    expect(mockEpilogue).toHaveBeenCalled();
     
-    // Get the first call arguments (the options definition)
+    // Get the options call arguments (the options definition)
     const optionsCall = mockOptions.mock.calls[0];
     const optionsObj = optionsCall[0];
     

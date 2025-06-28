@@ -18,6 +18,14 @@
     "test:e2e": "jest --testPathPattern=tests/e2e",
     "test:coverage": "jest --coverage"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erelsop/obrowse.git"
+  },
+  "homepage": "https://github.com/erelsop/obrowse#readme",
+  "bugs": {
+    "url": "https://github.com/erelsop/obrowse/issues"
+  },
   "keywords": [
     "browser-automation",
     "testing",
@@ -31,10 +39,26 @@
     "chrome",
     "firefox",
     "jest",
-    "mocha"
+    "mocha",
+    "automation",
+    "e2e",
+    "screenshot",
+    "headless"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Ethan Relsop",
+    "url": "https://github.com/erelsop"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE",
+    "obrowse.example.json"
+  ],
   "dependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "chai": "^5.1.0",

@@ -1,6 +1,20 @@
-node_modules
-src
-*.ts
-!*.d.ts
-rollup.config.ts
+# Development files
+src/
+tests/
+coverage/
+node_modules/
+.git/
+*.log
+
+# Config files
 tsconfig.json
+rollup.config.ts
+jest.config.*
+
+# Example and temp files  
+*.example.*
+*.test.*
+*.spec.*
+
+# Build artifacts (keep dist/ for npm package)
+# dist/ - intentionally not ignored

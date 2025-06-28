@@ -44,6 +44,17 @@ describe('Configuration Verification', () => {
     expect(() => verifyConfig(config)).not.toThrow();
   });
 
+  test('should reject configuration with unexpected keys', () => {
+    const config = {
+      browser: 'chrome',
+      url: 'https://example.com',
+      invalidKey: 'some value',
+      anotherInvalidKey: 'another value'
+    };
+    
+    expect(() => verifyConfig(config)).toThrow(/Unexpected keys found: invalidKey, anotherInvalidKey/);
+  });
+
   test('should reject configuration with missing required parameters', () => {
     // Since browser and url are checked in the main app.ts, not in verifyConfig
     // We'll check type errors instead

@@ -31,10 +31,14 @@ describe('Testing Framework Integration', () => {
         if (event === 'close') {
           // Store the callback to trigger later
           mockChildProcess.closeCallback = callback;
+        } else if (event === 'error') {
+          // Store the error callback to trigger later
+          mockChildProcess.errorCallback = callback;
         }
         return mockChildProcess;
       }),
       closeCallback: null,
+      errorCallback: null,
       // Mock stdio properties
       stdout: { on: jest.fn() },
       stderr: { on: jest.fn() }
@@ -83,6 +87,21 @@ describe('Testing Framework Integration', () => {
     // Check that spawn was called correctly
     expect(spawn).toHaveBeenCalledWith('npx', ['jest', testFilePath], { stdio: 'inherit' });
   });
+
+  test('should handle Jest process spawn errors', async () => {
+    // Define a path to a test file
+    const testFilePath = path.join('tests', 'sample.test.js');
+    
+    // Call to run Jest tests
+    const resultPromise = runJestTests(testFilePath);
+    
+    // Simulate spawn error
+    const error = new Error('Failed to spawn jest process');
+    mockChildProcess.errorCallback(error);
+    
+    // Await the promise rejection
+    await expect(resultPromise).rejects.toContain('Failed to start Jest');
+  });
   
   test('should run Mocha tests successfully', async () => {
     // Define a path to a test file
@@ -120,8 +139,23 @@ describe('Testing Framework Integration', () => {
     // Check that spawn was called correctly
     expect(spawn).toHaveBeenCalledWith('npx', ['mocha', testFilePath], { stdio: 'inherit' });
   });
-  
-  test('should handle non-existent test files', async () => {
+
+  test('should handle Mocha process spawn errors', async () => {
+    // Define a path to a test file
+    const testFilePath = path.join('tests', 'sample.test.js');
+    
+    // Call to run Mocha tests
+    const resultPromise = runMochaTests(testFilePath);
+    
+    // Simulate spawn error
+    const error = new Error('Failed to spawn mocha process');
+    mockChildProcess.errorCallback(error);
+    
+    // Await the promise rejection
+    await expect(resultPromise).rejects.toContain('Failed to start Mocha');
+  });
+
+  test('should handle non-existent test files for Jest', async () => {
     // Mock fs.existsSync to return false for this test
     (fs.existsSync as jest.MockedFunction<typeof fs.existsSync>).mockReturnValue(false);
     
@@ -130,6 +164,20 @@ describe('Testing Framework Integration', () => {
     
     // Call to run Jest tests
     await expect(runJestTests(testFilePath)).rejects.toContain('not found');
+    
+    // Verify that spawn was not called
+    expect(spawn).not.toHaveBeenCalled();
+  });
+
+  test('should handle non-existent test files for Mocha', async () => {
+    // Mock fs.existsSync to return false for this test
+    (fs.existsSync as jest.MockedFunction<typeof fs.existsSync>).mockReturnValue(false);
+    
+    // Define a path to a non-existent test file
+    const testFilePath = path.join('tests', 'nonexistent.test.js');
+    
+    // Call to run Mocha tests
+    await expect(runMochaTests(testFilePath)).rejects.toContain('not found');
     
     // Verify that spawn was not called
     expect(spawn).not.toHaveBeenCalled();
@@ -159,5 +207,40 @@ describe('Testing Framework Integration', () => {
     // Reset the spies
     jestSpy.mockRestore();
     mochaSpy.mockRestore();
+  });
+
+  test('should handle unsupported testing framework', async () => {
+    // Spy on console.error to verify the unsupported framework message
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    
+    // Test with unsupported framework
+    await handleTesting('unknown', 'test.js');
+    
+    // Verify the unsupported framework message was logged
+    expect(consoleSpy).toHaveBeenCalledWith('❌ Unsupported testing framework: unknown');
+    expect(consoleSpy).toHaveBeenCalledWith('Supported frameworks: jest, mocha');
+    
+    // Clean up
+    consoleSpy.mockRestore();
+  });
+
+  test('should handle errors during test execution', async () => {
+    // Spy on the runJestTests function to throw an error
+    const jestSpy = jest.spyOn(require('../../src/lib/testing/adapters/jestAdapter'), 'runJestTests');
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    
+    // Mock the function to throw an error
+    jestSpy.mockRejectedValue(new Error('Test execution failed'));
+    
+    // Test error handling
+    await handleTesting('jest', 'test.js');
+    
+    // Verify error was logged with new format
+    expect(consoleSpy).toHaveBeenCalledWith('❌ Test execution failed:');
+    expect(consoleSpy).toHaveBeenCalledWith('   Error: Test execution failed');
+    
+    // Clean up
+    jestSpy.mockRestore();
+    consoleSpy.mockRestore();
   });
 }); 
